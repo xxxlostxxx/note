@@ -1,0 +1,70 @@
+s
+
+-- Channel
+	public boolean isOpen( );
+	public void close( ) throws IOException;
+
+	InterruptibleChannel
+
+
+	通道只能在字节缓冲区上操作
+	因为操作系统都是以字节的形式实现底层 I/O 接口的。
+
+
+
+	3.1.1 打开通道、
+
+		File I/O 和 Stream I/O
+		那么相应地有两种类型的通道也就不足为怪了，它们是文件(file)通道和 套接字(socket)通道
+
+		FileChannel 类和三个 socket 通 道类:SocketChannel、ServerSocketChannel 和 DatagramChannel。
+
+
+		/**
+	     * Opens a socket channel.
+	     *
+	     * <p> The new channel is created by invoking the {@link
+	     * java.nio.channels.spi.SelectorProvider#openSocketChannel
+	     * openSocketChannel} method of the system-wide default {@link
+	     * java.nio.channels.spi.SelectorProvider} object.  </p>
+	     *
+	     * @return  A new socket channel
+	     *
+	     * @throws  IOException
+	     *          If an I/O error occurs
+	     */
+		SocketChannel sc = SocketChannel.open( );
+
+		// channel 连接
+		sc.connect (new InetSocketAddress ("somehost", someport));
+
+		**
+     * Opens a server-socket channel.
+	     *
+	     * <p> The new channel is created by invoking the {@link
+	     * java.nio.channels.spi.SelectorProvider#openServerSocketChannel
+	     * openServerSocketChannel} method of the system-wide default {@link
+	     * java.nio.channels.spi.SelectorProvider} object.
+	     *
+	     * <p> The new channel's socket is initially unbound; it must be bound to a
+	     * specific address via one of its socket's {@link
+	     * java.net.ServerSocket#bind(SocketAddress) bind} methods before
+	     * connections can be accepted.  </p>
+	     *
+	     * @return  A new socket channel
+	     *
+	     * @throws  IOException
+	     *          If an I/O error occurs
+	     */
+		ServerSocketChannel ssc = ServerSocketChannel.open( );
+		ssc.socket( ).bind (new InetSocketAddress (somelocalport));
+		DatagramChannel dc = DatagramChannel.open( );
+		RandomAccessFile raf = new RandomAccessFile ("somefile", "r");
+		FileChannel fc = raf.getChannel( );
+
+-- 单向、双向
+		通道可以是单向(unidirectional)或者双向的(bidirectional)。
+		一个 channel 类可能实现定义 read( )方法的 ReadableByteChannel 接口，
+		而另一个 channel 类也许实现 WritableByteChannel 接口以 提供 write( )方法。
+		实现这两种接口其中之一的类都是单向的，只能在一个方向上传输数据。
+		如果 一个类同时实现这两个接口，那么它是双向的，可以双向传输数据。
